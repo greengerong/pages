@@ -15,11 +15,14 @@ let projectDest = '.tmp',
         },
         html: {
             src: 'views/**/**.html',
-            dest: projectDest + "/views/"
+            dest: `${projectDest}/views/`
         },
         es6: {
             src: 'scripts/**/*.js',
             dest: `${projectDest}/scripts/`
+        },
+        lib: {
+            dest: `${projectDest}/lib/`
         }
     };
 
@@ -32,7 +35,7 @@ gulp.task('clean:html', () => {
         }));
 });
 
-gulp.task('clean:sass', () => {
+gulp.task('clean:css', () => {
     return gulp.src([app.sass.dest], {
             read: false
         })
@@ -51,9 +54,14 @@ gulp.task('clean:es6', () => {
 });
 
 
-gulp.task('sass', ['clean:sass'], () => {
-    gulp.src(app.sass.src)
-        .pipe(sass())
+gulp.task('css', ['clean:css'], () => {
+    let normalize = './node_modules/normalize.css/normalize.css';
+    mergeStream(
+            gulp.src(normalize),
+            gulp.src(app.sass.src)
+            .pipe(sass())
+        )
+        .pipe(concat('all.css'))
         .pipe(gulp.dest(app.sass.dest));
 });
 
@@ -78,6 +86,13 @@ gulp.task('html', ['clean:html'], () => {
         .pipe(gulp.dest(app.html.dest));
 });
 
+gulp.task('lib', () => {
+    let jquery = './node_modules/jquery/dist/jquery.min.js';
+    gulp.src([jquery])
+        .pipe(gulp.dest(app.lib.dest));
+
+});
+
 gulp.task('es6', ['clean:es6'], () => {
     let polyfill = './node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.js';
     mergeStream(
@@ -96,12 +111,10 @@ gulp.task('watch', () => {
     gulp.watch(app.html.src, ['html', 'browserSync']);
     gulp.watch(app.es6.src, ['es6', 'browserSync']);
     // gulp.watch('images/**/*.(png|jpg|jpeg)', ['images', 'browserSync']);
-    gulp.watch(app.sass.src, ['sass', 'browserSync']);
-
-    gulp.watch('styles/*.css', ['css']);
+    gulp.watch(app.sass.src, ['css', 'browserSync']);
 });
 
-gulp.task('build', ['sass', 'html', 'es6'], () => {
+gulp.task('build', ['lib', 'css', 'html', 'es6'], () => {
 
 });
 
