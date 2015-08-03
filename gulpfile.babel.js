@@ -9,8 +9,9 @@ import mergeStream from 'merge-stream';
 
 let projectDest = '.tmp',
     app = {
-        sass: {
+        css: {
             src: 'sass/**/**.scss',
+            outputFile: 'all.css',
             dest: `${projectDest}/style/`
         },
         html: {
@@ -19,6 +20,7 @@ let projectDest = '.tmp',
         },
         es6: {
             src: 'scripts/**/*.js',
+            outputFile: 'all.js',
             dest: `${projectDest}/scripts/`
         },
         lib: {
@@ -36,7 +38,7 @@ gulp.task('clean:html', () => {
 });
 
 gulp.task('clean:css', () => {
-    return gulp.src([app.sass.dest], {
+    return gulp.src([app.css.dest], {
             read: false
         })
         .pipe(clean({
@@ -58,11 +60,11 @@ gulp.task('css', ['clean:css'], () => {
     let normalize = './node_modules/normalize.css/normalize.css';
     mergeStream(
             gulp.src(normalize),
-            gulp.src(app.sass.src)
+            gulp.src(app.css.src)
             .pipe(sass())
         )
-        .pipe(concat('all.css'))
-        .pipe(gulp.dest(app.sass.dest));
+        .pipe(concat(app.css.outputFile))
+        .pipe(gulp.dest(app.css.dest));
 });
 
 gulp.task('browserSync', (done) => {
@@ -70,7 +72,7 @@ gulp.task('browserSync', (done) => {
         files: [
             `${projectDest}/**`
         ],
-        ghostMode: false, // 禁止对操作进行同步，在开发阶段，同步操作带来的困扰大于收益
+        ghostMode: true,
         startPath: '/views/page.html',
         server: {
             baseDir: ['.tmp/']
@@ -80,6 +82,8 @@ gulp.task('browserSync', (done) => {
     });
     browserSync.emitter.on('init', done);
 });
+
+gulp.task('reload', () => browserSync.reload);
 
 gulp.task('html', ['clean:html'], () => {
     gulp.src(app.html.src)
@@ -101,17 +105,17 @@ gulp.task('es6', ['clean:es6'], () => {
             .pipe(babel())
         )
         .pipe(sourcemaps.init())
-        .pipe(concat('all.js'))
+        .pipe(concat(app.es6.outputFile))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(app.es6.dest));
 });
 
 
 gulp.task('watch', () => {
-    gulp.watch(app.html.src, ['html', 'browserSync']);
-    gulp.watch(app.es6.src, ['es6', 'browserSync']);
-    // gulp.watch('images/**/*.(png|jpg|jpeg)', ['images', 'browserSync']);
-    gulp.watch(app.sass.src, ['css', 'browserSync']);
+    gulp.watch(app.html.src, ['html', 'reload']);
+    gulp.watch(app.es6.src, ['es6', 'reload']);
+    // gulp.watch('images/**/*.(png|jpg|jpeg)', ['images', 'reload']);
+    gulp.watch(app.css.src, ['css', 'reload']);
 });
 
 gulp.task('build', ['lib', 'css', 'html', 'es6'], () => {
