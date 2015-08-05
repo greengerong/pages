@@ -23,40 +23,29 @@ let projectDest = '.tmp',
             outputFile: 'all.js',
             dest: `${projectDest}/scripts/`
         },
+        images: {
+            src: ['images/**/*.png', 'images/**/*.jpg', 'images/**/*.jpeg'],
+            dest: `${projectDest}/images/`
+        },
         lib: {
             dest: `${projectDest}/lib/`
         }
     };
 
-gulp.task('clean:html', () => {
-    return gulp.src([app.html.dest], {
-            read: false
-        })
-        .pipe(clean({
-            force: true
-        }));
-});
+gulp.task('clean', () => {
+    // return gulp.src([projectDest], {
+            //         read: false
+            //     })
+            //     .pipe(clean({
+            //         force: true
+            //     })).on('error', (e) => {
+            //         console.log(e.message);
+            //     });
 
-gulp.task('clean:css', () => {
-    return gulp.src([app.css.dest], {
-            read: false
-        })
-        .pipe(clean({
-            force: true
-        }));
-});
-
-gulp.task('clean:es6', () => {
-    return gulp.src([app.es6.dest], {
-            read: false
-        })
-        .pipe(clean({
-            force: true
-        }));
 });
 
 
-gulp.task('css', ['clean:css'], () => {
+gulp.task('css', () => {
     let normalize = './node_modules/normalize.css/normalize.css';
     mergeStream(
             gulp.src(normalize),
@@ -85,7 +74,7 @@ gulp.task('browserSync', (done) => {
 
 gulp.task('reload', () => browserSync.reload);
 
-gulp.task('html', ['clean:html'], () => {
+gulp.task('html', () => {
     gulp.src(app.html.src)
         .pipe(gulp.dest(app.html.dest));
 });
@@ -97,7 +86,7 @@ gulp.task('lib', () => {
 
 });
 
-gulp.task('es6', ['clean:es6'], () => {
+gulp.task('es6', () => {
     let polyfill = './node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.js';
     mergeStream(
             gulp.src(polyfill),
@@ -110,15 +99,19 @@ gulp.task('es6', ['clean:es6'], () => {
         .pipe(gulp.dest(app.es6.dest));
 });
 
+gulp.task('images', () => {
+    gulp.src(app.images.src)
+        .pipe(gulp.dest(app.images.dest));
+});
 
 gulp.task('watch', () => {
     gulp.watch(app.html.src, ['html', 'reload']);
     gulp.watch(app.es6.src, ['es6', 'reload']);
-    // gulp.watch('images/**/*.(png|jpg|jpeg)', ['images', 'reload']);
+    gulp.watch(app.images.src, ['images', 'reload']);
     gulp.watch(app.css.src, ['css', 'reload']);
 });
 
-gulp.task('build', ['lib', 'css', 'html', 'es6'], () => {
+gulp.task('build', ['clean', 'lib', 'css', 'html', 'images', 'es6'], () => {
 
 });
 

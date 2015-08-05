@@ -1,5 +1,31 @@
-.test {
-    input {
-        max-width: 10px;
+$logoWidth: 170px;
+body {
+    background: #f8f8f8;
+    color: #333;
+    font: 15px/24px 'Open Sans', Helvetica, Arial, sans-serif;
+    -webkit-backface-visibility: hidden;
+    background-image: url(../images/cover.jpg);
+    background-position: center center;
+    background-color: #ddd;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.header {
+    .logo {
+        display: block;
+        width: $logoWidth;
+        margin: auto;
+        img {
+            width: $logoWidth;
+        }
     }
+}
+
+.time-line-header {
+    width: 220px;
+    display: block;
+    margin: auto;
+    border-bottom: 2px solid #e5e5e5;
 }
