@@ -1,4 +1,5 @@
 import gulp from 'gulp';
+import gulpUtil from 'gulp-util'
 import browserSync from 'browser-sync';
 import sass from 'gulp-sass';
 import clean from 'gulp-clean';
@@ -6,6 +7,7 @@ import sourcemaps from 'gulp-sourcemaps';
 import concat from 'gulp-concat';
 import babel from 'gulp-babel';
 import mergeStream from 'merge-stream';
+import chalk from 'chalk';
 
 let projectDest = '.tmp',
     app = {
@@ -24,33 +26,41 @@ let projectDest = '.tmp',
             dest: `${projectDest}/scripts/`
         },
         images: {
-            src: ['images/**/*.png', 'images/**/*.jpg', 'images/**/*.jpeg'],
-            dest: `${projectDest}/images/`
+            src: ['images/**/*.*', './bower_components/carousel-3d/dist/styles/images/**/*.*'],
+            dest: `${projectDest}/style/images/`
         },
         lib: {
             dest: `${projectDest}/lib/`
+        },
+        build: {
+            src: 'gulpfile.babel.js'
         }
     };
 
+let handleError = (error) => {
+    gulpUtil.log(chalk.red(error));
+};
+
+
 gulp.task('clean', () => {
     // return gulp.src([projectDest], {
-            //         read: false
-            //     })
-            //     .pipe(clean({
-            //         force: true
-            //     })).on('error', (e) => {
-            //         console.log(e.message);
-            //     });
-
+    //         read: false
+    //     })
+    //     .pipe(clean({
+    //         force: true
+    //     }));
 });
 
 
 gulp.task('css', () => {
-    let normalize = './node_modules/normalize.css/normalize.css';
+    let normalize = './node_modules/normalize.css/normalize.css',
+        // bootstrap = './node_modules/bootstrap/dist/css/bootstrap.min.css',
+        carousel3d = './bower_components/carousel-3d/dist/styles/jquery.carousel-3d.default.css';
     mergeStream(
-            gulp.src(normalize),
+            gulp.src([normalize, carousel3d]),
             gulp.src(app.css.src)
             .pipe(sass())
+            .on('error', handleError)
         )
         .pipe(concat(app.css.outputFile))
         .pipe(gulp.dest(app.css.dest));
@@ -80,16 +90,22 @@ gulp.task('html', () => {
 });
 
 gulp.task('lib', () => {
-    let jquery = './node_modules/jquery/dist/jquery.min.js';
-    gulp.src([jquery])
+    let jquery = './node_modules/jquery/dist/jquery.min.js',
+        jcarousel = './node_modules/jcarousel/dist/jquery.jcarousel.min.js',
+        jqueryResize = './bower_components/javascript-detect-element-resize/jquery.resize.js',
+        waitforimages = './bower_components/waitForImages/dist/jquery.waitforimages.js',
+        modernizr = './bower_components/modernizr/modernizr.js',
+        carousel3d = './bower_components/carousel-3d/dist/jquery.carousel-3d.js';
+    gulp.src([jquery, jqueryResize, , waitforimages, modernizr, carousel3d])
         .pipe(gulp.dest(app.lib.dest));
 
 });
 
 gulp.task('es6', () => {
-    let polyfill = './node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.js';
+    let polyfill = './node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.js',
+        bootstrap = './node_modules/bootstrap/dist/js/bootstrap.min.js';
     mergeStream(
-            gulp.src(polyfill),
+            gulp.src([polyfill]),
             gulp.src(app.es6.src)
             .pipe(babel())
         )
@@ -109,6 +125,7 @@ gulp.task('watch', () => {
     gulp.watch(app.es6.src, ['es6', 'reload']);
     gulp.watch(app.images.src, ['images', 'reload']);
     gulp.watch(app.css.src, ['css', 'reload']);
+    gulp.watch(app.build.src, ['build', 'reload']);
 });
 
 gulp.task('build', ['clean', 'lib', 'css', 'html', 'images', 'es6'], () => {

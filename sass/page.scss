@@ -24,7 +24,7 @@
         color: #333;
         font: 15px/24px 'Open Sans', Helvetica, Arial, sans-serif;
         -webkit-backface-visibility: hidden;
-        background-image: url(../images/cover.jpg);
+        background-image: url(images/cover.jpg);
         background-position: center center;
         background-color: #ddd;
         background-size: cover;
@@ -54,7 +54,7 @@
         position: relative;
         padding: 0 0 50px;
         margin: 0 auto;
-        width: 80%;
+        width: 90%;
         display: block;
         overflow: hidden;
         &:before {
@@ -72,64 +72,84 @@
             width: 50%;
             float: left;
             position: relative;
-            &:before {
-                right: -26px;
-                position: absolute;
-                top: 15px;
-                width: 6px;
-                height: 6px;
-                border: 3px solid #f8f8f8;
-                border-radius: 50%;
-                background: #e5e5e5;
-                content: '';
-            }
-            &:nth-child(odd) {
+            .post-content {
                 &:before {
-                    right: -7px;
-                    left: auto;
-                }
-            }
-            &:nth-child(even) {
-                &:before {
-                    right: auto;
-                    left: -7px;
-                }
-            }
-            .post-body {
-                padding: 30px 30px;
-                margin: 0 15px 30px;
-                background: #fff;
-                border-radius: 3px;
-                -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
-                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
-                word-wrap: break-word;
-                word-break: break-all;
-                img {
-                    width: 100%;
-                    max-width: 100%;
-                    height: auto;
-                    vertical-align: middle;
+                    position: absolute;
+                    top: 15px;
+                    width: 6px;
+                    height: 6px;
+                    border: 3px solid #f8f8f8;
+                    border-radius: 50%;
+                    background: #e5e5e5;
+                    content: '';
                 }
             }
             &:nth-child(odd) {
-                .post-body {
+                .post-content {
                     &:before {
-                        @include odd-post-arrow;
+                        right: -5px;
+                        left: auto;
                     }
-                    &:after {
-                        @include odd-post-arrow;
+                    .post-body {
+                        &:before {
+                            @include odd-post-arrow;
+                        }
+                        &:after {
+                            @include odd-post-arrow;
+                        }
                     }
                 }
             }
             &:nth-child(even) {
-                .post-body {
+                .post-content {
+                    margin-top: 100px;
                     &:before {
-                        @include even-post-arrow;
+                        right: auto;
+                        left: -5px;
                     }
-                    &:after {
-                        @include even-post-arrow;
+                    .post-body {
+                        &:before {
+                            @include even-post-arrow;
+                        }
+                        &:after {
+                            @include even-post-arrow;
+                        }
+                    }
+                }
+            }
+            .post-content {
+                padding: 0;
+                margin: 0 auto 0px;
+                position: relative;
+                .post-body {
+                    padding: 30px 30px;
+                    margin: 0 15px 30px;
+                    background: #fff;
+                    border-radius: 3px;
+                    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
+                    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
+                    word-wrap: break-word;
+                    word-break: break-all;
+                    .post-image {
+                        max-height: 300px;
+                        img {
+                            width: 100%;
+                            max-width: 100%;
+                            height: auto;
+                            vertical-align: middle;
+                        }
                     }
                 }
             }
         }
+    }
+    
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    
+    .clear:after {
+        clear: both;
     }
