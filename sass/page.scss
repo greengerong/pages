@@ -1,31 +1,135 @@
-$logoWidth: 170px;
-body {
-    background: #f8f8f8;
-    color: #333;
-    font: 15px/24px 'Open Sans', Helvetica, Arial, sans-serif;
-    -webkit-backface-visibility: hidden;
-    background-image: url(../images/cover.jpg);
-    background-position: center center;
-    background-color: #ddd;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
-.header {
-    .logo {
-        display: block;
-        width: $logoWidth;
-        margin: auto;
-        img {
+    $logoWidth: 170px;
+    @mixin odd-post-arrow {
+        border-top: 8px dashed transparent;
+        border-bottom: 8px solid transparent;
+        position: absolute;
+        top: 13px;
+        content: '';
+        right: 7px;
+        border-left: 8px solid #FFFFFF;
+    }
+    
+    @mixin even-post-arrow {
+        border-top: 8px dashed transparent;
+        border-bottom: 8px solid transparent;
+        position: absolute;
+        top: 13px;
+        content: '';
+        left: 7px;
+        border-right: 8px solid #FFFFFF;
+    }
+    
+    body {
+        background: #f8f8f8;
+        color: #333;
+        font: 15px/24px 'Open Sans', Helvetica, Arial, sans-serif;
+        -webkit-backface-visibility: hidden;
+        background-image: url(../images/cover.jpg);
+        background-position: center center;
+        background-color: #ddd;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    
+    .header {
+        .logo {
+            display: block;
             width: $logoWidth;
+            margin: auto;
+            img {
+                width: $logoWidth;
+            }
         }
     }
-}
-
-.time-line-header {
-    width: 220px;
-    display: block;
-    margin: auto;
-    border-bottom: 2px solid #e5e5e5;
-}
+    
+    .time-line-header {
+        width: 220px;
+        display: block;
+        margin: auto;
+        border-bottom: 2px solid #e5e5e5;
+    }
+    
+    .blog-posts {
+        position: relative;
+        padding: 0 0 50px;
+        margin: 0 auto;
+        width: 80%;
+        display: block;
+        overflow: hidden;
+        &:before {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -1px;
+            width: 2px;
+            height: 100%;
+            background: #e5e5e5;
+            content: '';
+        }
+        .article {
+            margin-top: 100px;
+            width: 50%;
+            float: left;
+            position: relative;
+            &:before {
+                right: -26px;
+                position: absolute;
+                top: 15px;
+                width: 6px;
+                height: 6px;
+                border: 3px solid #f8f8f8;
+                border-radius: 50%;
+                background: #e5e5e5;
+                content: '';
+            }
+            &:nth-child(odd) {
+                &:before {
+                    right: -7px;
+                    left: auto;
+                }
+            }
+            &:nth-child(even) {
+                &:before {
+                    right: auto;
+                    left: -7px;
+                }
+            }
+            .post-body {
+                padding: 30px 30px;
+                margin: 0 15px 30px;
+                background: #fff;
+                border-radius: 3px;
+                -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
+                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
+                word-wrap: break-word;
+                word-break: break-all;
+                img {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    vertical-align: middle;
+                }
+            }
+            &:nth-child(odd) {
+                .post-body {
+                    &:before {
+                        @include odd-post-arrow;
+                    }
+                    &:after {
+                        @include odd-post-arrow;
+                    }
+                }
+            }
+            &:nth-child(even) {
+                .post-body {
+                    &:before {
+                        @include even-post-arrow;
+                    }
+                    &:after {
+                        @include even-post-arrow;
+                    }
+                }
+            }
+        }
+    }
