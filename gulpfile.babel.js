@@ -26,7 +26,7 @@ let projectDest = '.tmp',
             dest: `${projectDest}/scripts/`
         },
         images: {
-            src: ['images/**/*.*', './bower_components/carousel-3d/dist/styles/images/**/*.*'],
+            src: ['images/**/*.*'],
             dest: `${projectDest}/style/images/`
         },
         lib: {
