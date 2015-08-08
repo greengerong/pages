@@ -9,6 +9,7 @@ import babel from 'gulp-babel';
 import mergeStream from 'merge-stream';
 import chalk from 'chalk';
 import plumber from 'gulp-plumber';
+import warp from 'gulp-wrap';
 
 let projectDest = '.tmp',
     app = {
@@ -109,7 +110,9 @@ gulp.task('es6', () => {
     mergeStream(
             gulp.src([polyfill]),
             gulp.src(app.es6.src)
+            .pipe(plumber())
             .pipe(babel())
+            .pipe(plumber.stop())
         )
         .pipe(sourcemaps.init())
         .pipe(concat(app.es6.outputFile))
