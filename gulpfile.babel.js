@@ -55,7 +55,6 @@ gulp.task('clean', () => {
 
 gulp.task('css', () => {
     let normalize = './node_modules/normalize.css/normalize.css',
-        // bootstrap = './node_modules/bootstrap/dist/css/bootstrap.min.css',
         carousel3d = './bower_components/carousel-3d/dist/styles/jquery.carousel-3d.default.css';
     mergeStream(
             gulp.src([normalize, carousel3d]),
@@ -94,12 +93,12 @@ gulp.task('html', () => {
 
 gulp.task('lib', () => {
     let jquery = './node_modules/jquery/dist/jquery.min.js',
-        jcarousel = './node_modules/jcarousel/dist/jquery.jcarousel.min.js',
         jqueryResize = './bower_components/javascript-detect-element-resize/jquery.resize.js',
         waitforimages = './bower_components/waitForImages/dist/jquery.waitforimages.js',
-        modernizr = './bower_components/modernizr/modernizr.js',
-        carousel3d = './bower_components/carousel-3d/dist/jquery.carousel-3d.js';
-    gulp.src([jquery, jqueryResize, , waitforimages, modernizr, carousel3d])
+        modernizr = './bower_components/modernizr/modernizr.js';
+    // carousel3d = './bower_components/carousel-3d/dist/jquery.carousel-3d.js';
+    // carousel3d should be fix issue, then use it with bower
+    gulp.src([jquery, jqueryResize, , waitforimages, modernizr])
         .pipe(gulp.dest(app.lib.dest));
 
 });
