@@ -8,6 +8,7 @@ import concat from 'gulp-concat';
 import babel from 'gulp-babel';
 import mergeStream from 'merge-stream';
 import chalk from 'chalk';
+import plumber from 'gulp-plumber';
 
 let projectDest = '.tmp',
     app = {
@@ -59,8 +60,10 @@ gulp.task('css', () => {
     mergeStream(
             gulp.src([normalize, carousel3d]),
             gulp.src(app.css.src)
+            .pipe(plumber())
             .pipe(sass())
-            .on('error', handleError)
+            .pipe(plumber.stop())
+            // .on('error', handleError)
         )
         .pipe(concat(app.css.outputFile))
         .pipe(gulp.dest(app.css.dest));
